@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Troubleshooting Flowchart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f2f2f2;
+    }
+
+    .banner {
+      background-color: #0052cc;
+      color: white;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .question-box {
+      background: white;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .question img {
+      width: 75%;
+      height: auto;
+    }
+
+    .buttons button {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .buttons .yes {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .buttons .no {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .buttons .maybe {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .buttons .start {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    Wicrosoft Certified
+  </div>
+
+  <div class="question-box">
+    <div id="question" class="question">
+      <img src="images/Troubleshoot_like_a_pro.jpg" alt="Troubleshoot like a pro!" />
+    </div>
+    <div class="buttons">
+      <button class="start" onclick="start()">Click to Start</button>
+    </div>
+  </div>
+
+  <script>
+    const flow = {
+      "Is it broke?": {
+        yes: "Did you mess with it?",
+        no: "Don't mess with it!!",
+        kinda: "Did you mess with it?"
+      },
+      "Did you mess with it?": {
+        yes: "You idiot!!",
+        no: "Will you get in trouble?"
+      },
+      "You idiot!!": {
+        _: "Will you get in trouble?"
+      },
+      "Will you get in trouble?": {
+        yes: "Can you blame it on someone else??",
+        no: "Can you get someone else to fix it?"
+      },
+      "Can you blame it on someone else??": {
+        yes: "Did it work??",
+        no: "Can you get someone else to fix it?"
+      },
+      "Can you get someone else to fix it?": {
+        yes: "NO PROBLEM",
+        no: "Can you hide it?"
+      },
+      "Can you hide it?": {
+        yes: "NO PROBLEM",
+        no: "Can you fix it??"
+      },
+      "Can you fix it??": {
+        yes: "NO PROBLEM",
+        no: "Do you believe in miracles??"
+      },
+      "Do you believe in miracles??": {
+        yes: "Have you prayed REALLY hard?",
+        no: "You're screwed."
+      },
+      "Have you prayed REALLY hard?": {
+        yes: "NO PROBLEM",
+        no: "You're screwed."
+      },
+      "Did it work??": {
+        yes: "NO PROBLEM",
+        no: "You're screwed."
+      }
+    };
+
+    const imageMap = {
+      "Is it broke?": "Is_it_broke.jpg",
+      "Did you mess with it?": "Did_you_mess_with_it.jpg",
+      "You idiot!!": "You_idiot.jpg",
+      "Will you get in trouble?": "Will_you_get_in_trouble.jpg",
+      "Can you blame it on someone else??": "Can_you_blame_it_on_someone_else.jpg",
+      "Can you get someone else to fix it?": "Can_you_get_someone_else_to_fix_it.jpg",
+      "NO PROBLEM": "NO_PROBLEM.jpg",
+      "Can you hide it?": "Can_you_hide_it.jpg",
+      "Can you fix it??": "Can_you_fix_it.jpg",
+      "Do you believe in miracles??": "Do_you_believe_in_miracles.jpg",
+      "Have you prayed REALLY hard?": "Have_you_prayed_REALLY_hard.jpg",
+      "You're screwed.": "You're_screwed.jpg",
+      "Don't mess with it!!": "Don't_mess_with_it.jpg",
+      "Did it work??": "Did_it_work.jpg"
+    };
+
+    function updateQuestionImage(text) {
+      const imgFile = imageMap[text];
+      const questionDiv = document.getElementById("question");
+      if (imgFile) {
+        questionDiv.innerHTML = `<img src="images/${imgFile}" alt="${text}" />`;
+      } else {
+        questionDiv.innerText = text;
+      }
+    }
+
+    function start() {
+      updateQuestionImage("Is it broke?");
+      const buttons = document.querySelector(".buttons");
+      buttons.innerHTML = `
+        <button class="yes" onclick="answer('yes')">Yes</button>
+        <button class="no" onclick="answer('no')">No</button>
+        <button class="maybe" onclick="answer('kinda')">Kinda</button>
+      `;
+    }
+
+    function answer(response) {
+      const currentText = Object.keys(imageMap).find(key =>
+        document.getElementById("question").innerHTML.includes(imageMap[key])
+      );
+      const current = currentText || "Is it broke?";
+      const next = flow[current]?.[response] || flow[current]?.["_"] || "NO PROBLEM";
+      updateQuestionImage(next);
+
+      const buttons = document.querySelector(".buttons");
+      if (!flow[next]) {
+        buttons.innerHTML = '<button class="start" onclick="location.reload()">Restart</button>';
+      } else {
+        buttons.innerHTML = '';
+        if (flow[next].yes) {
+          buttons.innerHTML += '<button class="yes" onclick="answer(\'yes\')">Yes</button>';
+        }
+        if (flow[next].no) {
+          buttons.innerHTML += '<button class="no" onclick="answer(\'no\')">No</button>';
+        }
+        if (flow[next].kinda) {
+          buttons.innerHTML += '<button class="maybe" onclick="answer(\'kinda\')">Kinda</button>';
+        }
+        if (flow[next]["_"]) {
+          buttons.innerHTML += '<button class="yes" onclick="answer(\'yes\')">Continue</button>';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
